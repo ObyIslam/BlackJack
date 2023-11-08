@@ -16,11 +16,15 @@ namespace BlackJack
         {
             Card = card;
         }
-
+        
         public int CalculateScore()
         {
             if (Card.Contains("Ace"))
             {
+                if (Score > 17)
+                {
+                    return Score + 1;
+                }
                 return Score + 11;
             }
             else if (Card.Contains("King") || Card.Contains("Queen") || Card.Contains("Jack"))

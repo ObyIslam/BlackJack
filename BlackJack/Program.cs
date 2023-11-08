@@ -1,8 +1,10 @@
-﻿namespace BlackJack
+﻿using System;
+
+namespace BlackJack
 {
     internal class Program
     {
-
+        static Random rnd = new Random();
         static string[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
         static string space = "----------------------------------------";
         static void Main(string[] args)
@@ -19,10 +21,23 @@
 
             }
 
+            //Deck deck = new Deck();
+            //foreach (var i in deck.Cards)
+            //{
+            //    Console.WriteLine(i);
+            //}
+            //for (int i = 0; i < 55; i++)
+            //{
+
+            //    Console.WriteLine(GenerateRandomCard());
+            //}
+
         }
 
         static void PlayBlackjack()
         {
+            Deck deck = new Deck();
+
             BlackJack playerHand = new BlackJack(GenerateRandomCard());
             BlackJack dealerHand = new BlackJack(GenerateRandomCard());
 
@@ -39,11 +54,11 @@
             //stick or twist part
             while (playerScore < 21)
             {
-                Console.Write("Do you want to stick or twist - s/t? ");
-                
+                Console.Write("Do you want to stand or hit - s/h? ");
+
                 string choice = Console.ReadLine().ToLower();
 
-                if (choice == "t")
+                if (choice == "h")
                 {
                     BlackJack newCard = new BlackJack(GenerateRandomCard());
                     Console.WriteLine(space);
@@ -51,7 +66,7 @@
                     playerScore = newCard.CalculateScore() + playerScore;
                     Console.WriteLine($"Your current score is {playerScore}");
 
-                    if (playerScore > 21)
+                    if (playerScore > 1000)
                     {
                         Console.WriteLine("Bust! You lose.");
                         return;
@@ -69,7 +84,7 @@
             while (dealerScore < 17)
             {
                 BlackJack newCard = new BlackJack(GenerateRandomCard());
-            
+
                 Console.WriteLine($"Card dealt to dealer is the {newCard.Card}");
                 dealerScore = newCard.CalculateScore() + dealerScore;
             }
@@ -90,20 +105,20 @@
 
         static string GenerateRandomCard()
         {
-            string[] suits = { "Hearts", "Diamonds", "Clubs", "Spades" };
+            Deck deck = new Deck();
+            int randomNumber = rnd.Next(0, deck.Cards.Count); // Generate a random number between 1 and size of deck
 
-            Random random = new Random();
-            int randomSuitIndex = random.Next(suits.Length);
-            int randomRankIndex = random.Next(ranks.Length);
-            string randomCard = ranks[randomRankIndex] + " of " + suits[randomSuitIndex];
-            return randomCard;
+            if (randomNumber >= 0 && randomNumber < deck.Cards.Count)
+            {
+                string randomCard = deck.Cards[randomNumber].ToString();
+                return randomCard;
+            }
+
+            return null; //if the deck of cards run out
         }
 
+
     }
-
-    
-
-
 
 }
 
