@@ -21,7 +21,7 @@ namespace BlackJack
         {
             if (Card.Contains("Ace"))
             {
-                if (Score > 17)
+                if (Score > 17)//Ace logic to determine whether value is a 1 or 11
                 {
                     return Score + 1;
                 }

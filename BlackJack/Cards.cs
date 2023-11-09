@@ -19,7 +19,7 @@ namespace BlackJack
             Suit = suit;
         }
 
-        public override string ToString()
+        public override string ToString()// displays card in string format
         {
             return $"{Rank} of {Suit}";
         }

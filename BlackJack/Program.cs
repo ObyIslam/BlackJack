@@ -5,7 +5,8 @@ namespace BlackJack
     internal class Program
     {
         static Random rnd = new Random();
-        static string[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
+        static int win = 0;
+        static int loss = 0;
         static string space = "----------------------------------------";
         static void Main(string[] args)
         {
@@ -13,45 +14,53 @@ namespace BlackJack
             while (true)
             {
                 PlayBlackjack();
-                Console.Write("Do you want to play again? (y/n): ");
-                if (Console.ReadLine().ToLower() != "y")
+                Console.WriteLine(space);
+                Console.Write("Do you want to play again or see your statistcs (y/s): ");
+                string answer = Console.ReadLine();
+
+                while (answer != "y" && answer != "s")
                 {
+                    Console.Write("Please enter y or s: ");
+                    answer = Console.ReadLine();
+                }
+                if (answer.ToLower() == "y")//to play again
+                {
+                    PlayBlackjack();
+                }
+                else if (answer.ToLower() == "s")//to see statistics
+                {
+                    Console.WriteLine(space);
+                    Statistics();
                     break;
                 }
 
             }
 
-            //Deck deck = new Deck();
-            //foreach (var i in deck.Cards)
-            //{
-            //    Console.WriteLine(i);
-            //}
-            //for (int i = 0; i < 55; i++)
-            //{
-
-            //    Console.WriteLine(GenerateRandomCard());
-            //}
-
         }
 
-        static void PlayBlackjack()
+        static void PlayBlackjack()//Begins BlackJack Game
         {
+            
+            
+
             Deck deck = new Deck();
 
             BlackJack playerHand = new BlackJack(GenerateRandomCard());
             BlackJack dealerHand = new BlackJack(GenerateRandomCard());
 
+            //Cards are given out to player and dealer
+            Console.WriteLine(space);
             Console.WriteLine($"Player Card dealt is the {playerHand.Card}");
             Console.WriteLine($"Dealer Card dealt is the {dealerHand.Card}");
 
             int playerScore = playerHand.CalculateScore();
             int dealerScore = dealerHand.CalculateScore();
-
+            //score after round 1
             Console.WriteLine(space);
             Console.WriteLine($"Your current Score is {playerScore}");
             Console.WriteLine($"Dealer's current Score is {dealerScore}");
 
-            //stick or twist part
+            //stand or hit part
             while (playerScore < 21)
             {
                 Console.Write("Do you want to stand or hit - s/h? ");
@@ -66,9 +75,11 @@ namespace BlackJack
                     playerScore = newCard.CalculateScore() + playerScore;
                     Console.WriteLine($"Your current score is {playerScore}");
 
-                    if (playerScore > 1000)
+                    if (playerScore > 21)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Bust! You lose.");
+                        Console.ResetColor();
                         return;
                     }
                 }
@@ -95,15 +106,23 @@ namespace BlackJack
             // Determine the winner
             if (playerScore > 21 || (dealerScore <= 21 && dealerScore >= playerScore))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Dealer wins.");
+                Console.ResetColor();
+                loss++;
+                return;
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("You win!");
+                Console.ResetColor();
+                win++;
+                return;
             }
         }
 
-        static string GenerateRandomCard()
+        static string GenerateRandomCard()//Generates Card
         {
             Deck deck = new Deck();
             int randomNumber = rnd.Next(0, deck.Cards.Count); // Generate a random number between 1 and size of deck
@@ -115,6 +134,12 @@ namespace BlackJack
             }
 
             return null; //if the deck of cards run out
+        }
+
+        static void Statistics()
+        {
+            Console.WriteLine($"Your total wins are {win}");
+            Console.WriteLine($"Your total losses are {loss}");
         }
 
 
